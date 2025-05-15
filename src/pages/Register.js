@@ -1,7 +1,8 @@
 // frontend/src/pages/Register.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { checkServerHealth } from '../utils/api';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -10,9 +11,18 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [serverStatus, setServerStatus] = useState(true);
   
   const { register } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkServer = async () => {
+      const isAlive = await checkServerHealth();
+      setServerStatus(isAlive);
+    };
+    checkServer();
+  }, []);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +71,12 @@ const Register = () => {
   return (
     <div className="form-container">
       <h2 className="form-title">Register</h2>
+      
+      {!serverStatus && (
+        <div className="server-error">
+          Server is currently unavailable. Please try again later.
+        </div>
+      )}
       
       {error && <div className="form-error">{error}</div>}
       

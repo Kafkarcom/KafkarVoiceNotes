@@ -1,11 +1,23 @@
 // frontend/src/utils/api.js
 import axios from 'axios';
+import config from '../config';
+
+// Function to check if the server is alive
+export const checkServerHealth = async () => {
+  try {
+    await axios.get(`${config.get('baseURL')}/api/health`, { timeout: 5000 });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  baseURL: config.get('baseURL'),
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: config.get('timeouts')?.request,
 });
 
 // Add a request interceptor to include the token in every request

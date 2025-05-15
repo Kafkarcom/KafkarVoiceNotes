@@ -1,6 +1,7 @@
 // frontend/src/pages/NotesPage.js
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
+import NoteForm from '../components/NoteForm';
 
 const NotesPage = () => {
   const [notes, setNotes] = useState([]);
@@ -182,26 +183,26 @@ const NotesPage = () => {
               )}
             </div>
             
-            <div className="form-group">
-              <label htmlFor="title">Title</label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                disabled={!isEditing && !isCreating}
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="content">Content</label>
-              <textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                disabled={!isEditing && !isCreating}
-              />
-            </div>
+            <NoteForm
+              note={selectedNote}
+              isNew={isCreating}
+              onSave={({ title: newTitle, content: newContent }) => {
+                setTitle(newTitle);
+                setContent(newContent);
+                handleSave();
+              }}
+              onCancel={() => {
+                if (isCreating) {
+                  setIsCreating(false);
+                  setTitle('');
+                  setContent('');
+                } else {
+                  setIsEditing(false);
+                  setTitle(selectedNote.title);
+                  setContent(selectedNote.content);
+                }
+              }}
+            />
           </>
         ) : (
           <div style={{ textAlign: 'center', marginTop: '100px' }}>

@@ -1,0 +1,12 @@
+{
+  "baseURL": "http://192.168.2.22/:5000",
+  "apiVersion": "v1",
+  "timeouts": {
+    "request": 5000,
+    "session": 3600
+  },
+  "features": {
+    "voiceToText": true,
+    "autoSave": false
+  }
+}
